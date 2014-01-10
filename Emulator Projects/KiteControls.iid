@@ -1,0 +1,422 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IisuInteractionDesignerProject Version="3.0.19">
+  <Graph id="{2889e309-f8ba-4437-8cda-f63703da1473}">
+    <Node id="{348927b2-fe52-438f-86ed-49d04981bb98}" name="Steering" type="visualizer:label">
+      <Input id="{54cbb934-21a7-40be-95c8-5bf9840d5b2a}" name="steering" />
+    </Node>
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{68a6217a-5dfc-4b6a-aa70-4c13b14401f7}" destination="{348927b2-fe52-438f-86ed-49d04981bb98}" destinationinput="{54cbb934-21a7-40be-95c8-5bf9840d5b2a}" />
+    <Node id="{f217e21a-c371-43a5-b326-2fa0c451d7dc}" name="HandFrontThreshold" type="input:slider">
+      <Value value="0.146" min="0" max="0.5" />
+      <Output id="{8fdd9370-ae2c-494c-804d-c5fd6e9096f4}" name="HandFrontThreshold" />
+    </Node>
+    <Node id="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" name="Script" type="lua script">
+      <Input id="{91c16e22-0bd2-42d4-8677-230d60f3f623}" name="Wheel_Rotation_Max_Angle" />
+      <Input id="{133b6ab1-0073-4899-b6a8-849d817beff6}" name="HandFrontThreshold" />
+      <Input id="{825c5304-e274-4baf-9ca2-9bc242229a81}" name="USER1.SKELETON.PARTS.Pelvis" />
+      <Input id="{74c9c7e0-51a3-47dc-84be-f68d71fe9c31}" name="USER1.SKELETON.PARTS.RightWrist" />
+      <Input id="{5fafa7d4-b569-48fd-b45e-74ec44990ba5}" name="USER1.SKELETON.PARTS.LeftWrist" />
+      <Input id="{8b373acc-55f3-484f-ae65-e83181b853d1}" name="USER1.IsActive" />
+      <Output id="{4a48aa6d-4230-4996-97d3-5ad12d2b5b09}" name="bigRadius" />
+      <Output id="{ec596a8c-9e3f-46e6-8526-ab8576f260d3}" name="smallRadius" />
+      <Output id="{5ba82c27-d805-4518-b4a2-7245c6c5968c}" name="leftHand_Safe" />
+      <Output id="{4a7cbf7e-a0cd-4339-979a-883f3b52ddc4}" name="rightHand_Safe" />
+      <Output id="{ad110a6c-fee2-47ea-840e-aef7e0ac9888}" name="left_hand" />
+      <Output id="{07feeded-f20b-48af-9838-245d03f9059d}" name="right_hand" />
+      <Output id="{4ed8c10e-a2df-4423-aa18-a1cdeac0ce38}" name="wheelDirectionVector" />
+      <Output id="{7b30f79e-bd9a-4b92-a027-f1610c92b164}" name="wheelDirectionVectorR" />
+      <Output id="{694b9439-7d9d-4752-a524-05a9c78107ab}" name="Wheel_Free_Rotation" />
+      <Output id="{153a6074-adec-4538-a56a-35e23a682a27}" name="planarDirectionVector" />
+      <Output id="{d4e039a3-fb38-4194-b07a-3c82d6ca2525}" name="leftPoint" />
+      <Output id="{840dc73d-b81c-4663-804a-6194e39c6f59}" name="rightPoint" />
+      <Output id="{632ba5d2-34ce-4184-a06f-00a749d7cf5c}" name="centerPoint" />
+      <Output id="{aa475e8b-e080-477c-9f9a-8debeb2ba5a4}" name="Wheel_Rotation" />
+      <Output id="{68a6217a-5dfc-4b6a-aa70-4c13b14401f7}" name="steering" />
+      <Output id="{bad47e93-941d-4915-84a9-0791aeec4b0c}" name="userActive" />
+      <Output id="{3324c7a6-0152-461b-847d-36c1c79c55f1}" name="BodyDistance" />
+      <Output id="{22144187-a352-404c-9772-1b40e20904aa}" name="BodyDistanceNormalised" />
+      <CustomParameter id="{aa475e8b-e080-477c-9f9a-8debeb2ba5a4}" />
+      <CustomParameter id="{68a6217a-5dfc-4b6a-aa70-4c13b14401f7}" />
+      <CustomParameter id="{bad47e93-941d-4915-84a9-0791aeec4b0c}" />
+      <CustomParameter id="{22144187-a352-404c-9772-1b40e20904aa}" />
+      <Content><![CDATA[-----------------------------------------------------------------------------------------------------------------------------------
+--  DISCLAIMER
+--  All rights reserved to SOFTKINETIC INTERNATIONAL SA/NV (a company incorporated and existing under the laws of Belgium, with its principal place of business at
+--  Boulevard de la Plainelaan 15, 1050 Brussels (Belgium), registered with the Crossroads bank for enterprises under company number 0811 784 189 - Softkinetic)
+--
+--  Terms and conditions of use under license agreement : SOFTKINETIC IISUTM FREEMIUM LICENSE AGREEMENT 
+--  Note: Any content and information related to iisu free is confidential and proprietary information and trade secrets of Softkinetic or its licensors. Header files
+--  included in the Software as well as any delivered demonstration code and sample code (whether included in the Documentation or not), the documentation
+--  and any derivatives thereof may only be shared with other licensees of the Software, and exclusively on the Softkinetic iisu free developer community forum. 
+--  For any question about terms and conditions, please contact: info@softkinetic.com
+-----------------------------------------------------------------------------------------------------------------------------------
+
+function init()
+-- Important note:
+--   It's best to initialize ALL your variables here. Otherwise, you might get unexpected results.
+--   See the iisu Interaction Designer manual for more info.
+leftHand_Safe_position_set = false
+rightHand_Safe_position_set = false
+centerPoint_set = false
+centerPoint = SK.Vector3()
+leftHand_Safe = SK.Vector3()
+rightHand_Safe = SK.Vector3()
+directionVector = SK.Vector3()
+wheelDirectionVector = SK.Vector3()
+wheelDirectionVectorR = SK.Vector3()
+leftPoint = SK.Vector3()
+rightPoint = SK.Vector3()
+bigRadius = 0.05
+smallRadius = 0.03
+Wheel_Rotation = 0
+BodyDistance = 0.0
+prevBodyDistance = 0.0
+BodyDistanceNormalised = 0.0
+steering = false
+steeringDetectionSamples = {}
+steeringDetectionSamplesAmount = 10
+steeringDetectionIndex = 0
+
+for i=1, steeringDetectionSamplesAmount, 1 do
+	steeringDetectionSamples[i] = false
+end
+
+end
+
+function getSteeringState(isSteering)
+
+	steeringDetectionSamples[steeringDetectionIndex] = isSteering
+	steeringDetectionIndex = steeringDetectionIndex + 1
+	if steeringDetectionIndex == steeringDetectionSamplesAmount + 1 then
+		steeringDetectionIndex = 1
+	end
+	amountOfSteeringSamples = 0
+	for i=1, steeringDetectionSamplesAmount, 1 do
+	
+		if steeringDetectionSamples[i] == true then
+			amountOfSteeringSamples = amountOfSteeringSamples + 1
+		end
+	
+	end
+	
+	if not steering then 
+		
+		if amountOfSteeringSamples == steeringDetectionSamplesAmount then
+			steering = true
+		end
+		
+	else
+	
+		if amountOfSteeringSamples == 0 then
+			steering = false
+		end
+	
+	end
+
+	return steering
+	
+end
+
+function main()
+  pelvis = USER1_SKELETON_PARTS_Pelvis
+	left_hand = USER1_SKELETON_PARTS_LeftWrist
+	right_hand = USER1_SKELETON_PARTS_RightWrist
+	
+	userActive = USER1_IsActive
+	
+	-------------------------------------------------------------------------------------------
+	-- We are not sure that the position for the left and right hand is "safe" 
+	-- (forward enough and hand found by iisu)
+	-------------------------------------------------------------------------------------------
+	leftHand_Safe_position_set = false
+	rightHand_Safe_position_set = false
+	-------------------------------------------------------------------------------------------
+	
+	-------------------------------------------------------------------------------------------
+	-- Detect if the hand is forward enough
+	-------------------------------------------------------------------------------------------
+	leftHand_Front = ((left_hand:front()-pelvis:front())>HandFrontThreshold)
+	rightHand_Front = ((right_hand:front()-pelvis:front())>HandFrontThreshold)
+	-------------------------------------------------------------------------------------------
+	
+	-------------------------------------------------------------------------------------------
+	-- If the left hand is "safe" then memorize the safe position
+	-------------------------------------------------------------------------------------------
+	if(leftHand_Front) then
+		leftHand_Safe_position_set = true
+		leftHand_Safe = left_hand
+	end
+	-------------------------------------------------------------------------------------------
+
+	-------------------------------------------------------------------------------------------
+	-- If the right hand is "safe" then memorize the safe position
+	-------------------------------------------------------------------------------------------
+	if(rightHand_Front) then
+		rightHand_Safe_position_set = true
+		rightHand_Safe = right_hand
+	end
+	-------------------------------------------------------------------------------------------
+	
+	-------------------------------------------------------------------------------------------
+	-- if both hands are "safe" we can compute a new center point value
+	-- and blend it with the previous center point value
+	-------------------------------------------------------------------------------------------
+	if(rightHand_Safe_position_set and leftHand_Safe_position_set) then
+		centerPoint_new = (rightHand_Safe + leftHand_Safe) * 0.5
+		centerPoint = centerPoint*0.5+centerPoint_new*0.5
+		centerPoint_set = true
+	end
+	-------------------------------------------------------------------------------------------
+
+	if rightHand_Front or leftHand_Front then
+		steering = getSteeringState(true)
+	else
+		steering = getSteeringState(false)
+	end
+	
+	newBodyDistance = SK.Math_abs(centerPoint.y - USER1_SKELETON_PARTS_Pelvis.y)
+	BodyDistance = BodyDistance + (newBodyDistance - BodyDistance) * 0.025
+	
+	--BodyDistance = SK.Math_clamp(BodyDistance, 0.22, 0.38)
+	
+	if BodyDistance < 0.30 then
+		BodyDistance = 0.30
+	elseif BodyDistance > 0.40 then
+		BodyDistance = 0.40
+	end
+	
+	
+	BodyDistanceNormalised = (BodyDistance - 0.30)/(0.40 - 0.30)
+	
+	if BodyDistanceNormalised > 0.75 then
+		BodyDistanceNormalised = 0.75
+	end
+	
+	-------------------------------------------------------------------------------------------
+	-- compute the steering angle based on the pitch of the vector going from center to right hand
+	-- (if the right hand is not known, left to center vector) if both hands are known left to right vector
+	-- the pitch and yaw of this vector relative to the "right unit vector" are the values returned
+	-------------------------------------------------------------------------------------------
+	if(centerPoint_set and (rightHand_Safe_position_set or leftHand_Safe_position_set)) then
+		if(rightHand_Safe_position_set) then
+			directionVector = rightHand_Safe - leftHand_Safe
+		else
+			if(rightHand_Safe_position_set) then
+				directionVector = rightHand_Safe - centerPoint
+			else
+				directionVector = centerPoint - leftHand_Safe
+			end
+		end
+		planarDirectionVector = directionVector
+		planarDirectionVector = planarDirectionVector - (SK.Axis_FRONT * directionVector:front())
+		
+		planarDirectionVector:normalize(0)
+
+		Wheel_Free_Rotation = SK.axisAngle(planarDirectionVector, SK.Axis_RIGHT, SK.Axis_DOWN)
+		
+		Wheel_Free_Rotation = Macros.Smooth(Wheel_Free_Rotation,0.3)
+
+		
+		-- Clamp the angle
+		Wheel_Clamped_Rotation = 0.0
+		Wheel_Clamped_Rotation = math.max( -Wheel_Rotation_Max_Angle ,math.min( Wheel_Rotation_Max_Angle ,Wheel_Free_Rotation))
+
+		-- rescale the angle in the [-1,1] range
+		if(Wheel_Rotation_Max_Angle == 0) then
+			Wheel_Rotation = 0
+		else
+			Wheel_Rotation = (Wheel_Clamped_Rotation + Wheel_Rotation_Max_Angle)/(2*Wheel_Rotation_Max_Angle)
+		end
+	end
+	-------------------------------------------------------------------------------------------
+	
+	-------------------------------------------------------------------------------------------
+	-- visualisation code
+	-------------------------------------------------------------------------------------------
+	if(centerPoint_set and (rightHand_Safe_position_set or leftHand_Safe_position_set)) then
+		bigRadius = 0.05
+		smallRadius = 0.03
+		ratio = math.pi/180.0
+		wheelDirectionVector = SK.Axis_UP * math.sin(ratio*-Wheel_Clamped_Rotation) + SK.Axis_RIGHT * math.cos(ratio*-Wheel_Clamped_Rotation)
+    wheelDirectionVectorR = wheelDirectionVector * -1.0	
+		leftPoint = centerPoint + wheelDirectionVector * 0.05
+		rightPoint = centerPoint + wheelDirectionVectorR * 0.05
+  end
+	-------------------------------------------------------------------------------------------
+end
+]]></Content>
+    </Node>
+    <Link source="{d4f4f38a-fd08-4e84-80bc-f9114bd45cf2}" sourceoutput="{a8623c25-577b-4e36-908c-15e5b2c01b65}" destination="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" destinationinput="{91c16e22-0bd2-42d4-8677-230d60f3f623}" />
+    <Link source="{f217e21a-c371-43a5-b326-2fa0c451d7dc}" sourceoutput="{8fdd9370-ae2c-494c-804d-c5fd6e9096f4}" destination="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" destinationinput="{133b6ab1-0073-4899-b6a8-849d817beff6}" />
+    <Link source="{b2661cdd-39c2-41b1-85d1-4a8e7bd5efec}" sourceoutput="{a8bcf0a6-4078-4f8a-ae37-b3ede59e2b6c}" destination="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" destinationinput="{825c5304-e274-4baf-9ca2-9bc242229a81}" />
+    <Link source="{b2661cdd-39c2-41b1-85d1-4a8e7bd5efec}" sourceoutput="{bd750e06-26ee-4cf1-8540-c46ff27f050e}" destination="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" destinationinput="{74c9c7e0-51a3-47dc-84be-f68d71fe9c31}" />
+    <Link source="{b2661cdd-39c2-41b1-85d1-4a8e7bd5efec}" sourceoutput="{ecd356a6-0a7d-4b38-b4f2-ff5fe70ad9f3}" destination="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" destinationinput="{5fafa7d4-b569-48fd-b45e-74ec44990ba5}" />
+    <Link source="{639715fd-90fd-4855-b9f6-563e992a721b}" sourceoutput="{d48e92c6-9a04-404e-a9e1-416210caa111}" destination="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" destinationinput="{8b373acc-55f3-484f-ae65-e83181b853d1}" />
+    <Node id="{639715fd-90fd-4855-b9f6-563e992a721b}" name="" type="iisu device">
+      <Output id="{5711b2fb-abb6-4136-b53c-0844eb26a8fa}" name="USER1.SKELETON.KeyPointsConfidence" />
+      <Output id="{d48e92c6-9a04-404e-a9e1-416210caa111}" name="USER1.IsActive" />
+    </Node>
+    <Node id="{d4f4f38a-fd08-4e84-80bc-f9114bd45cf2}" name="Wheel_Rotation_Max_Angle" type="input:slider">
+      <Value value="49.95" min="0" max="90" />
+      <Output id="{a8623c25-577b-4e36-908c-15e5b2c01b65}" name="Wheel_Rotation_Max_Angle" />
+    </Node>
+    <Node id="{b95509c2-a83a-4e6b-9c1b-9523a732e1b6}" name="Left_Hand" type="primitive3d:sphere">
+      <Input id="{8b46b178-3f4a-48bd-892c-1ea0b58f1d45}" name="left_hand" />
+      <Input id="{39f64e31-ac61-4a7e-97c7-f353ba529385}" name="smallRadius" />
+      <Property name="Radius" value="0.03" input="{39f64e31-ac61-4a7e-97c7-f353ba529385}" />
+      <Property name="Color" value="( r=0.8000001; g=0.8000001; b=0.8000001; a=1 )" />
+      <Property name="Selected" value="True" />
+      <Property name="Position" value="( x=0; y=0; z=0 )" input="{8b46b178-3f4a-48bd-892c-1ea0b58f1d45}" />
+      <Property name="Scale" value="( x=0.03; y=0.03; z=0.03 )" />
+      <Property name="ForceCull" value="False" />
+    </Node>
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{ad110a6c-fee2-47ea-840e-aef7e0ac9888}" destination="{b95509c2-a83a-4e6b-9c1b-9523a732e1b6}" destinationinput="{8b46b178-3f4a-48bd-892c-1ea0b58f1d45}" />
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{ec596a8c-9e3f-46e6-8526-ab8576f260d3}" destination="{b95509c2-a83a-4e6b-9c1b-9523a732e1b6}" destinationinput="{39f64e31-ac61-4a7e-97c7-f353ba529385}" />
+    <Node id="{a94402f0-0b80-4514-8c5f-01704e7a9017}" name="Right_Hand" type="primitive3d:sphere">
+      <Input id="{fb25159f-987f-46f0-b087-5ef2d958560b}" name="right_hand" />
+      <Input id="{84cf9702-7bb8-4a25-8c32-b2bcf3d34378}" name="smallRadius" />
+      <Property name="Radius" value="0.03" input="{84cf9702-7bb8-4a25-8c32-b2bcf3d34378}" />
+      <Property name="Color" value="( r=0.8000001; g=0.8000001; b=0.8000001; a=1 )" />
+      <Property name="Selected" value="False" />
+      <Property name="Position" value="( x=0; y=0; z=0 )" input="{fb25159f-987f-46f0-b087-5ef2d958560b}" />
+      <Property name="Scale" value="( x=0.03; y=0.03; z=0.03 )" />
+      <Property name="ForceCull" value="False" />
+    </Node>
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{07feeded-f20b-48af-9838-245d03f9059d}" destination="{a94402f0-0b80-4514-8c5f-01704e7a9017}" destinationinput="{fb25159f-987f-46f0-b087-5ef2d958560b}" />
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{ec596a8c-9e3f-46e6-8526-ab8576f260d3}" destination="{a94402f0-0b80-4514-8c5f-01704e7a9017}" destinationinput="{84cf9702-7bb8-4a25-8c32-b2bcf3d34378}" />
+    <Node id="{5cb1fe2d-169b-47f9-b1fc-3a778b248874}" name="Center_Point" type="primitive3d:sphere">
+      <Input id="{718dcc7a-72f7-4e65-9494-b8601d363efe}" name="bigRadius" />
+      <Input id="{73c95cb1-953c-4a7c-bf0c-e43c03d6b934}" name="centerPoint" />
+      <Property name="Radius" value="0.05" input="{718dcc7a-72f7-4e65-9494-b8601d363efe}" />
+      <Property name="Color" value="( r=0.8000001; g=0.8000001; b=0.8000001; a=1 )" />
+      <Property name="Selected" value="False" />
+      <Property name="Position" value="( x=-0.0714836; y=-0.898997; z=0.979001 )" input="{73c95cb1-953c-4a7c-bf0c-e43c03d6b934}" />
+      <Property name="Scale" value="( x=0.05; y=0.05; z=0.05 )" />
+      <Property name="ForceCull" value="False" />
+    </Node>
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{4a48aa6d-4230-4996-97d3-5ad12d2b5b09}" destination="{5cb1fe2d-169b-47f9-b1fc-3a778b248874}" destinationinput="{718dcc7a-72f7-4e65-9494-b8601d363efe}" />
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{632ba5d2-34ce-4184-a06f-00a749d7cf5c}" destination="{5cb1fe2d-169b-47f9-b1fc-3a778b248874}" destinationinput="{73c95cb1-953c-4a7c-bf0c-e43c03d6b934}" />
+    <Node id="{2aa91c9d-1468-4855-8876-b2ff25ddae99}" name="Left_Cylinder" type="primitive3d:cylinder">
+      <Input id="{def05884-c75a-4e89-97b7-39a7733863cb}" name="leftPoint" />
+      <Input id="{8bdb2bf4-e5e4-411b-8151-995a24c622e6}" name="wheelDirectionVector" />
+      <Input id="{674c8de0-6b1a-4c80-9e2f-92df198991ec}" name="smallRadius" />
+      <Property name="Direction" value="( x=-0.643456; y=0; z=0.7654831 )" input="{8bdb2bf4-e5e4-411b-8151-995a24c622e6}" />
+      <Property name="Length" value="0.1" />
+      <Property name="Radius" value="0.03" input="{674c8de0-6b1a-4c80-9e2f-92df198991ec}" />
+      <Property name="Color" value="( r=1; g=0; b=0; a=1 )" />
+      <Property name="Selected" value="False" />
+      <Property name="Position" value="( x=-0.103656; y=-0.898997; z=1.01728 )" input="{def05884-c75a-4e89-97b7-39a7733863cb}" />
+      <Property name="Scale" value="( x=0.03; y=0.03; z=0.05 )" />
+      <Property name="ForceCull" value="False" />
+    </Node>
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{d4e039a3-fb38-4194-b07a-3c82d6ca2525}" destination="{2aa91c9d-1468-4855-8876-b2ff25ddae99}" destinationinput="{def05884-c75a-4e89-97b7-39a7733863cb}" />
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{4ed8c10e-a2df-4423-aa18-a1cdeac0ce38}" destination="{2aa91c9d-1468-4855-8876-b2ff25ddae99}" destinationinput="{8bdb2bf4-e5e4-411b-8151-995a24c622e6}" />
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{ec596a8c-9e3f-46e6-8526-ab8576f260d3}" destination="{2aa91c9d-1468-4855-8876-b2ff25ddae99}" destinationinput="{674c8de0-6b1a-4c80-9e2f-92df198991ec}" />
+    <Node id="{687e7eb1-0759-4209-bd95-28beb3658e8c}" name="Right_Cylinder" type="primitive3d:cylinder">
+      <Input id="{ec7153ed-9861-4dd0-97be-7bd35b736484}" name="rightPoint" />
+      <Input id="{dcf34b80-ca90-4c20-b9ae-1e5ed323ffbf}" name="wheelDirectionVectorR" />
+      <Input id="{a2e6ce79-4f91-491d-b03c-3c479b769a76}" name="smallRadius" />
+      <Property name="Direction" value="( x=0.643456; y=0; z=-0.7654831 )" input="{dcf34b80-ca90-4c20-b9ae-1e5ed323ffbf}" />
+      <Property name="Length" value="0.1" />
+      <Property name="Radius" value="0.03" input="{a2e6ce79-4f91-491d-b03c-3c479b769a76}" />
+      <Property name="Color" value="( r=0; g=0; b=1; a=1 )" />
+      <Property name="Selected" value="False" />
+      <Property name="Position" value="( x=-0.0393108; y=-0.898997; z=0.940727 )" input="{ec7153ed-9861-4dd0-97be-7bd35b736484}" />
+      <Property name="Scale" value="( x=0.03; y=0.03; z=0.05 )" />
+      <Property name="ForceCull" value="False" />
+    </Node>
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{840dc73d-b81c-4663-804a-6194e39c6f59}" destination="{687e7eb1-0759-4209-bd95-28beb3658e8c}" destinationinput="{ec7153ed-9861-4dd0-97be-7bd35b736484}" />
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{7b30f79e-bd9a-4b92-a027-f1610c92b164}" destination="{687e7eb1-0759-4209-bd95-28beb3658e8c}" destinationinput="{dcf34b80-ca90-4c20-b9ae-1e5ed323ffbf}" />
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{ec596a8c-9e3f-46e6-8526-ab8576f260d3}" destination="{687e7eb1-0759-4209-bd95-28beb3658e8c}" destinationinput="{a2e6ce79-4f91-491d-b03c-3c479b769a76}" />
+    <Node id="{7a8c9341-2509-49d4-a727-f2da6933c86f}" name="Wheel Rotation Angle" type="visualizer:angle">
+      <Input id="{e3a968dd-4ed0-485a-9b29-30fbbf613b04}" name="Wheel_Free_Rotation" />
+    </Node>
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{694b9439-7d9d-4752-a524-05a9c78107ab}" destination="{7a8c9341-2509-49d4-a727-f2da6933c86f}" destinationinput="{e3a968dd-4ed0-485a-9b29-30fbbf613b04}" />
+    <Node id="{b2661cdd-39c2-41b1-85d1-4a8e7bd5efec}" name="" type="iisu skeleton">
+      <Output id="{a8bcf0a6-4078-4f8a-ae37-b3ede59e2b6c}" name="USER1.SKELETON.PARTS.Pelvis" />
+      <Output id="{bd750e06-26ee-4cf1-8540-c46ff27f050e}" name="USER1.SKELETON.PARTS.RightWrist" />
+      <Output id="{ecd356a6-0a7d-4b38-b4f2-ff5fe70ad9f3}" name="USER1.SKELETON.PARTS.LeftWrist" />
+    </Node>
+    <Node id="{7b71dd2d-4df8-4975-a52c-234a37e6e747}" name="BodyDistance" type="visualizer:label">
+      <Input id="{64885bf5-9b1d-422e-ba55-b6c53334d108}" name="BodyDistance" />
+    </Node>
+    <Link source="{cc1236e4-c0a8-4269-92d1-36f8c969c91b}" sourceoutput="{3324c7a6-0152-461b-847d-36c1c79c55f1}" destination="{7b71dd2d-4df8-4975-a52c-234a37e6e747}" destinationinput="{64885bf5-9b1d-422e-ba55-b6c53334d108}" />
+  </Graph>
+  <Movies>
+    <Movie id="9D-A4-60-AD-FA-26-94-EB-45-FB-82-F3-51-96-0B-9C" />
+  </Movies>
+  <WindowLayout>
+    <DockPanel FormatVersion="1.0" DockLeftPortion="0.25" DockRightPortion="0.25" DockTopPortion="0.25" DockBottomPortion="0.25" ActiveDocumentPane="5" ActivePane="-1">
+      <Contents Count="6">
+        <Content ID="0" PersistString="IID.FormDepth" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="1" PersistString="{f217e21a-c371-43a5-b326-2fa0c451d7dc}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="2" PersistString="{d4f4f38a-fd08-4e84-80bc-f9114bd45cf2}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="3" PersistString="{7a8c9341-2509-49d4-a727-f2da6933c86f}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="4" PersistString="{348927b2-fe52-438f-86ed-49d04981bb98}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="5" PersistString="{7b71dd2d-4df8-4975-a52c-234a37e6e747}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      </Contents>
+      <Panes Count="6">
+        <Pane ID="0" DockState="Document" ActiveContent="0">
+          <Contents Count="1">
+            <Content ID="0" RefID="0" />
+          </Contents>
+        </Pane>
+        <Pane ID="1" DockState="Document" ActiveContent="3">
+          <Contents Count="1">
+            <Content ID="0" RefID="3" />
+          </Contents>
+        </Pane>
+        <Pane ID="2" DockState="Document" ActiveContent="1">
+          <Contents Count="1">
+            <Content ID="0" RefID="1" />
+          </Contents>
+        </Pane>
+        <Pane ID="3" DockState="Document" ActiveContent="2">
+          <Contents Count="1">
+            <Content ID="0" RefID="2" />
+          </Contents>
+        </Pane>
+        <Pane ID="4" DockState="Document" ActiveContent="4">
+          <Contents Count="1">
+            <Content ID="0" RefID="4" />
+          </Contents>
+        </Pane>
+        <Pane ID="5" DockState="Document" ActiveContent="5">
+          <Contents Count="1">
+            <Content ID="0" RefID="5" />
+          </Contents>
+        </Pane>
+      </Panes>
+      <DockWindows>
+        <DockWindow ID="0" DockState="Document" ZOrderIndex="1">
+          <NestedPanes Count="6">
+            <Pane ID="0" RefID="1" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+            <Pane ID="1" RefID="2" PrevPane="1" Alignment="Bottom" Proportion="0.5" />
+            <Pane ID="2" RefID="3" PrevPane="2" Alignment="Top" Proportion="0.5" />
+            <Pane ID="3" RefID="0" PrevPane="1" Alignment="Right" Proportion="0.5" />
+            <Pane ID="4" RefID="4" PrevPane="0" Alignment="Left" Proportion="0.5" />
+            <Pane ID="5" RefID="5" PrevPane="4" Alignment="Bottom" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+        <DockWindow ID="1" DockState="DockLeft" ZOrderIndex="3">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="2" DockState="DockRight" ZOrderIndex="4">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="3" DockState="DockTop" ZOrderIndex="5">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="4" DockState="DockBottom" ZOrderIndex="2">
+          <NestedPanes Count="0" />
+        </DockWindow>
+      </DockWindows>
+      <FloatWindows Count="0" />
+    </DockPanel>
+  </WindowLayout>
+  <Visualization3D userCentroidsVisible="True" userCentroidVelocitiesVisible="True" skeletonVisible="True" uiControllerVisible="False" uiPointerVisible="False" umActivationZonesVisible="False" umActivationZoneLabelsVisible="False" userBoundingBoxVisible="True" userLabelVisible="True" userPointsVisible="True" userMassCenterVisible="True" userHeightVisible="True" userBodyDirVisible="False" userPrincipalDirVisible="True" cameraFrustumVisible="False" cameraFrustumProjVisible="False" cameraInfoVisible="False" sourceColorMapVisible="False" labelImageVisible="False" scenePointsVisible="False" userMaskVisible="True" depthClipPlanesVisible="False" xyzClipPlanesVisible="False" clipVolumeVisible="False" user1Color="66FF66FF" user2Color="66CCFFFF" user3Color="FF6600FF" user4Color="FFFF00FF" uiController1Color="66FF66FF" uiController2Color="66CCFFFF" uiController3Color="FF6600FF" uiController4Color="FFFF00FF" gridColor="999999FF" gridSize="4" gridSubdivisions="16" ciPalmPositionVisible="False" ciPalmNormalVisible="False" ciPointingDirVisible="False" ciFingerTipsVisible="False" ciCentroidsVisible="False" ciMeshVisible="False" hand1Color="66FF66FF" hand2Color="66CCFFFF">
+    <Camera>
+      <Position x="3" y="-3" z="2.5" />
+      <Orientation yaw="45" pitch="-25" />
+    </Camera>
+  </Visualization3D>
+</IisuInteractionDesignerProject>

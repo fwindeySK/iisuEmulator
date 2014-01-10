@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<EmulatorProject>
+  <IIDProjectPath>C:\Users\Frederik.SOFTKINETIC\Desktop\iisu Emulator\KiteControls.iid</IIDProjectPath>
+  <StartStopMapping>IID.Script.userActive</StartStopMapping>
+  <Mappings>
+    <Mapping>
+      <Name>IID.Script.Wheel_Rotation</Name>
+      <Emulator>Mouse</Emulator>
+      <DataSource>0</DataSource>
+    </Mapping>
+    <Mapping>
+      <Name>IID.Script.steering</Name>
+      <Emulator>Mouse</Emulator>
+      <DataSource>0</DataSource>
+    </Mapping>
+    <Mapping>
+      <Name>IID.Script.userActive</Name>
+      <Emulator>NONE</Emulator>
+      <DataSource>-1</DataSource>
+    </Mapping>
+    <Mapping>
+      <Name>IID.Script.BodyDistanceNormalised</Name>
+      <Emulator>Mouse</Emulator>
+      <DataSource>1</DataSource>
+    </Mapping>
+  </Mappings>
+</EmulatorProject>

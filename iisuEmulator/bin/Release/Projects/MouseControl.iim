@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<EmulatorProject>
+  <IIDProjectPath>Projects\Pointing.iid</IIDProjectPath>
+  <StartStopMapping>IID.Script.handActive</StartStopMapping>
+  <Mappings>
+    <Mapping>
+      <Name>IID.Script.pointingX</Name>
+      <Emulator>Mouse</Emulator>
+      <DataSource>0</DataSource>
+    </Mapping>
+    <Mapping>
+      <Name>IID.Script.pointingY</Name>
+      <Emulator>Mouse</Emulator>
+      <DataSource>1</DataSource>
+    </Mapping>
+    <Mapping>
+      <Name>IID.Script.handActive</Name>
+      <Emulator>NONE</Emulator>
+      <DataSource>-1</DataSource>
+    </Mapping>
+    <Mapping>
+      <Name>IID.Script.handIsClosed</Name>
+      <Emulator>Mouse</Emulator>
+      <DataSource>0</DataSource>
+    </Mapping>
+  </Mappings>
+</EmulatorProject>

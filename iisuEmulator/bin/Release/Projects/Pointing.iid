@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IisuInteractionDesignerProject Version="3.0.19">
+  <Graph id="{23bbad23-4ee8-4e95-bdee-76410e2a5f5a}">
+    <Node id="{2a56ba03-2b3c-4204-b424-1c112550332b}" name="" type="iisu device">
+      <Output id="{493ca850-8d97-4dbb-8d80-b2664aad9df9}" name="CI.HAND1.Status" />
+      <Output id="{57e9b329-7626-4b85-a2aa-cda391d7c104}" name="CI.HAND2.Status" />
+      <Output id="{d16ae437-9b9b-4026-bd92-55dc31046226}" name="CI.HAND1.PalmPosition2D" />
+      <Output id="{6178d1d3-1fd2-4dfd-bde8-405408872fc1}" name="CI.HAND2.PalmPosition2D" />
+      <Output id="{5719dbb9-9a69-4ca1-89c0-41e9a352aca6}" name="SOURCE.CAMERA.DEPTH.Width" />
+      <Output id="{ccb2527c-2208-4cf5-9e14-2e9c2a300bd2}" name="SOURCE.CAMERA.DEPTH.Height" />
+      <Output id="{42631922-2d29-4e34-b810-27293888a1f4}" name="CI.HAND1.UpperGrabber3D" />
+      <Output id="{7bb33a8e-cdef-4777-a18f-0802612358e9}" name="CI.HAND1.LowerGrabber3D" />
+      <Output id="{0c23fdbd-e678-467e-8b3f-37560914b2c6}" name="CI.HAND1.CentralGrabber2D" />
+      <Output id="{1d6c7e09-e77f-466c-b1b6-81cef212212f}" name="CI.HAND2.CentralGrabber2D" />
+      <Output id="{6053ce80-68f3-4e71-96dc-ca5a499c3fda}" name="CI.HAND2.UpperGrabber3D" />
+      <Output id="{fd473f50-9b25-4746-9dbe-f87dcb4e4da9}" name="CI.HAND2.LowerGrabber3D" />
+    </Node>
+    <Node id="{41c753db-3d40-494e-bf0a-9e6d78191e00}" name="" type="iisu skeleton" />
+    <Node id="{41ced11f-a652-44ca-9052-953b104cd76d}" name="Script" type="lua script">
+      <Input id="{54bb3e64-2eb8-4990-8e82-fa1e1465aca2}" name="CI.HAND1.Status" />
+      <Input id="{b509b3ee-00ea-43a6-ba39-2de9e23f36c9}" name="CI.HAND2.Status" />
+      <Input id="{a5828208-124f-4de0-a1cc-6c814ccc21e3}" name="SOURCE.CAMERA.DEPTH.Width" />
+      <Input id="{62ee9d1a-fe28-4182-b7ba-a299aff2157f}" name="SOURCE.CAMERA.DEPTH.Height" />
+      <Input id="{ca846e64-e5f2-48ab-9641-e01deec9e341}" name="CI.HAND1.UpperGrabber3D" />
+      <Input id="{bdf35673-3683-4ef6-a5ab-2080527f4714}" name="CI.HAND1.LowerGrabber3D" />
+      <Input id="{df65f40c-51cf-4113-b819-5a79971cebc7}" name="CI.HAND1.CentralGrabber2D" />
+      <Input id="{944670d4-7fa4-4a89-b5a4-363949c1c45b}" name="CI.HAND2.CentralGrabber2D" />
+      <Input id="{5aa7987b-f4c7-4a60-9034-c91ae473f768}" name="CI.HAND2.UpperGrabber3D" />
+      <Input id="{1462a795-8622-405b-a0af-121eccbd2daf}" name="CI.HAND2.LowerGrabber3D" />
+      <Output id="{7ae6a194-c2a5-478e-a706-e6af9ba4bf10}" name="pointingX" />
+      <Output id="{b23346ac-f2d0-43d1-8b11-e341d901bf16}" name="pointingY" />
+      <Output id="{3fd42926-dc1b-4a03-8722-c07a3053dc41}" name="horizontalPosition1" />
+      <Output id="{3b8ff109-c915-4304-bfb5-7922c8335a4c}" name="verticalPosition1" />
+      <Output id="{473a1ed3-25d4-4f2a-be78-bd22009a72e7}" name="horizontalPosition2" />
+      <Output id="{0409a4e7-3209-4695-bf5d-a618fce52ca5}" name="verticalPosition2" />
+      <Output id="{6aa09f96-eb4f-4407-96d6-e73d317fa6fe}" name="hand1IsActive" />
+      <Output id="{865723ce-7ca8-449a-941f-87cd0f4fdbce}" name="hand2IsActive" />
+      <Output id="{cc98375e-39ae-4506-8c11-8f9276900295}" name="handIsClosed1" />
+      <Output id="{ed3708b3-79b5-4de1-81ba-0053addf8c2c}" name="handIsClosed2" />
+      <Output id="{f74edf5e-d9e4-471f-bc05-39509f39f927}" name="handActive" />
+      <Output id="{b3eb1d3f-a542-411d-9ed4-10ab8bcfffb6}" name="handIsClosed" />
+      <CustomParameter id="{7ae6a194-c2a5-478e-a706-e6af9ba4bf10}" />
+      <CustomParameter id="{b23346ac-f2d0-43d1-8b11-e341d901bf16}" />
+      <CustomParameter id="{f74edf5e-d9e4-471f-bc05-39509f39f927}" />
+      <CustomParameter id="{b3eb1d3f-a542-411d-9ed4-10ab8bcfffb6}" />
+      <Content><![CDATA[function init()
+
+	handsClosedAmountOfSamples = 3 --amount of samples in the open/close filter
+	
+	handsClosedSamples1 = {}
+	for i=1, handsClosedAmountOfSamples, 1 do
+		handsClosedSamples1[i] = false
+	end
+
+	handsClosedIndex1 = 1
+	handIsClosed1 = false
+	
+	handsClosedSamples2 = {}
+	for i=1, handsClosedAmountOfSamples, 1 do
+		handsClosedSamples2[i] = false
+	end
+
+	handsClosedIndex2 = 1
+	handIsClosed2 = false
+
+	hand1IsActive = false
+	hand2IsActive = false
+	
+	horizontalPointingLeftBorder = 30
+	horizontalPointingRightBorder = 30
+	verticalPointingTopBorder = 30
+	verticalPointingBottomBorder = 30
+
+	smoothing = 0.4
+
+	horizontalPosition1 = 0
+	horizontalPosition2 = 0
+	verticalPosition1 = 0
+	verticalPosition2 = 0
+	
+	pointingX = 0
+	pointingY = 0
+	
+	openDistance = 0.06
+	closeDistance = 0.04
+	
+	handActive = false
+	handIsClosed = false
+	
+end
+
+function getHandHorizontalNormalized(ciPalm2D, cameraDepthWidth)
+
+	horizontal2D = SK.Math_clamp(ciPalm2D.x, horizontalPointingLeftBorder, cameraDepthWidth - horizontalPointingRightBorder)
+
+	return (horizontal2D - horizontalPointingLeftBorder)/(cameraDepthWidth - (horizontalPointingLeftBorder + horizontalPointingRightBorder))
+
+end
+
+function getHandVerticalNormalized(ciPalm2D, cameraDepthHeight)
+
+	vertical2D = SK.Math_clamp(ciPalm2D.y, verticalPointingTopBorder, cameraDepthHeight - verticalPointingBottomBorder)
+
+	return (vertical2D - verticalPointingTopBorder)/(cameraDepthHeight - (verticalPointingBottomBorder + verticalPointingTopBorder))
+
+end
+
+function isClosed1()
+
+	if(not handIsClosed1) then
+	
+		if(CI_HAND1_UpperGrabber3D:distance(CI_HAND1_LowerGrabber3D) <= closeDistance) then
+	
+				handsClosedSamples1[handsClosedIndex1] = true
+				handsClosedIndex1 = handsClosedIndex1 + 1
+				if(handsClosedIndex1 > handsClosedAmountOfSamples) then
+				
+					handsClosedIndex1 = 1
+				
+				end
+				
+				amountOfClosedSamples1 = 0
+				for i=1, handsClosedAmountOfSamples, 1 do
+				
+					if handsClosedSamples1[i] == true then
+						amountOfClosedSamples1 = amountOfClosedSamples1 + 1
+					end
+				
+				end
+				
+				if amountOfClosedSamples1 == handsClosedAmountOfSamples then
+					handIsClosed1 = true
+				end
+		end
+		
+	else
+		
+		if(CI_HAND1_UpperGrabber3D:distance(CI_HAND1_LowerGrabber3D) >= openDistance) then
+	
+				handsClosedSamples1[handsClosedIndex1] = false
+				handsClosedIndex1 = handsClosedIndex1 + 1
+				if(handsClosedIndex1 > handsClosedAmountOfSamples) then
+				
+					handsClosedIndex1 = 1
+				
+				end
+				
+				amountOfOpenSamples1 = 0
+				for i=1, handsClosedAmountOfSamples, 1 do
+				
+					if handsClosedSamples1[i] == false then
+						amountOfOpenSamples1 = amountOfOpenSamples1 + 1
+					end
+				
+				end
+				
+				if amountOfOpenSamples1 == handsClosedAmountOfSamples then
+					handIsClosed1 = false
+				end
+		end
+	
+	end
+
+end
+
+function isClosed2()
+
+	if(not handIsClosed2) then
+	
+		if(CI_HAND2_UpperGrabber3D:distance(CI_HAND2_LowerGrabber3D) <= closeDistance) then
+	
+				handsClosedSamples2[handsClosedIndex2] = true
+				handsClosedIndex2 = handsClosedIndex2 + 1
+				if(handsClosedIndex2 > handsClosedAmountOfSamples) then
+				
+					handsClosedIndex2 = 1
+				
+				end
+				
+				amountOfClosedSamples2 = 0
+				for i=1, handsClosedAmountOfSamples, 1 do
+				
+					if handsClosedSamples2[i] == true then
+						amountOfClosedSamples2 = amountOfClosedSamples2 + 1
+					end
+				
+				end
+				
+				if amountOfClosedSamples2 == handsClosedAmountOfSamples then
+					handIsClosed2 = true
+				end
+		end
+		
+	else
+		
+		if(CI_HAND2_UpperGrabber3D:distance(CI_HAND2_LowerGrabber3D) >= openDistance) then
+	
+				handsClosedSamples2[handsClosedIndex2] = false
+				handsClosedIndex2 = handsClosedIndex2 + 1
+				if(handsClosedIndex2 > handsClosedAmountOfSamples) then
+				
+					handsClosedIndex2 = 1
+				
+				end
+				
+				amountOfOpenSamples2 = 0
+				for i=1, handsClosedAmountOfSamples, 1 do
+				
+					if handsClosedSamples2[i] == false then
+						amountOfOpenSamples2 = amountOfOpenSamples2 + 1
+					end
+				
+				end
+				
+				if amountOfOpenSamples2 == handsClosedAmountOfSamples then
+					handIsClosed2 = false
+				end
+		end
+	
+	end
+
+end
+
+function main()
+
+	if(CI_HAND1_Status >= 1) then
+
+		if(not hand1IsActive) then
+		
+			horizontalPosition1 = 1 - getHandHorizontalNormalized(CI_HAND1_CentralGrabber2D, SOURCE_CAMERA_DEPTH_Width)
+			verticalPosition1 = getHandVerticalNormalized(CI_HAND1_CentralGrabber2D, SOURCE_CAMERA_DEPTH_Height)
+			hand1IsActive = true
+			
+		else
+		
+			horizontalPosition1 = horizontalPosition1 + ((1 - getHandHorizontalNormalized(CI_HAND1_CentralGrabber2D, SOURCE_CAMERA_DEPTH_Width)) - horizontalPosition1) * smoothing
+			verticalPosition1 = verticalPosition1 + (getHandVerticalNormalized(CI_HAND1_CentralGrabber2D, SOURCE_CAMERA_DEPTH_Height) - verticalPosition1) * smoothing			
+		
+		end
+	
+		isClosed1()
+		
+	else
+	
+		hand1IsActive = false
+		if(handIsClosed1) then
+		
+			handIsClosed1 = false
+			for i=1, handsClosedAmountOfSamples, 1 do
+				
+					handsClosedSamples1[i] = false
+					
+			end
+		
+		end
+		
+	end
+	
+	if(CI_HAND2_Status >= 1) then
+	
+		if(not hand2IsActive) then
+		
+			horizontalPosition2 = 1 - getHandHorizontalNormalized(CI_HAND2_CentralGrabber2D, SOURCE_CAMERA_DEPTH_Width)
+			verticalPosition2 = getHandVerticalNormalized(CI_HAND2_CentralGrabber2D, SOURCE_CAMERA_DEPTH_Height)
+			hand2IsActive = true
+			
+		else
+		
+			horizontalPosition2 = horizontalPosition2 + ((1 - getHandHorizontalNormalized(CI_HAND2_CentralGrabber2D, SOURCE_CAMERA_DEPTH_Width)) - horizontalPosition2) * smoothing
+			verticalPosition2 = verticalPosition2 + (getHandVerticalNormalized(CI_HAND2_CentralGrabber2D, SOURCE_CAMERA_DEPTH_Height) - verticalPosition2) * smoothing			
+		
+		end
+	
+		isClosed2()
+		
+	else
+	
+		hand2IsActive = false
+		if(handIsClosed2) then
+		
+			handIsClosed2 = false
+			for i=1, handsClosedAmountOfSamples, 1 do
+				
+					handsClosedSamples2[i] = false
+					
+			end
+		
+		end
+		
+	end
+	
+	if(hand1IsActive) then
+	
+		pointingX = horizontalPosition1
+		pointingY = verticalPosition1
+		handIsClosed = handIsClosed1
+		handActive = true
+		
+	elseif(hand2IsActive) then
+	
+		pointingX = horizontalPosition2
+		pointingY = verticalPosition2
+		handIsClosed = handIsClosed2
+		handActive = true
+		
+	else
+	
+		handIsClosed = false
+		handActive = false
+	
+	end
+
+end
+]]></Content>
+    </Node>
+    <Link source="{2a56ba03-2b3c-4204-b424-1c112550332b}" sourceoutput="{493ca850-8d97-4dbb-8d80-b2664aad9df9}" destination="{41ced11f-a652-44ca-9052-953b104cd76d}" destinationinput="{54bb3e64-2eb8-4990-8e82-fa1e1465aca2}" />
+    <Link source="{2a56ba03-2b3c-4204-b424-1c112550332b}" sourceoutput="{57e9b329-7626-4b85-a2aa-cda391d7c104}" destination="{41ced11f-a652-44ca-9052-953b104cd76d}" destinationinput="{b509b3ee-00ea-43a6-ba39-2de9e23f36c9}" />
+    <Link source="{2a56ba03-2b3c-4204-b424-1c112550332b}" sourceoutput="{5719dbb9-9a69-4ca1-89c0-41e9a352aca6}" destination="{41ced11f-a652-44ca-9052-953b104cd76d}" destinationinput="{a5828208-124f-4de0-a1cc-6c814ccc21e3}" />
+    <Link source="{2a56ba03-2b3c-4204-b424-1c112550332b}" sourceoutput="{ccb2527c-2208-4cf5-9e14-2e9c2a300bd2}" destination="{41ced11f-a652-44ca-9052-953b104cd76d}" destinationinput="{62ee9d1a-fe28-4182-b7ba-a299aff2157f}" />
+    <Link source="{2a56ba03-2b3c-4204-b424-1c112550332b}" sourceoutput="{42631922-2d29-4e34-b810-27293888a1f4}" destination="{41ced11f-a652-44ca-9052-953b104cd76d}" destinationinput="{ca846e64-e5f2-48ab-9641-e01deec9e341}" />
+    <Link source="{2a56ba03-2b3c-4204-b424-1c112550332b}" sourceoutput="{7bb33a8e-cdef-4777-a18f-0802612358e9}" destination="{41ced11f-a652-44ca-9052-953b104cd76d}" destinationinput="{bdf35673-3683-4ef6-a5ab-2080527f4714}" />
+    <Link source="{2a56ba03-2b3c-4204-b424-1c112550332b}" sourceoutput="{0c23fdbd-e678-467e-8b3f-37560914b2c6}" destination="{41ced11f-a652-44ca-9052-953b104cd76d}" destinationinput="{df65f40c-51cf-4113-b819-5a79971cebc7}" />
+    <Link source="{2a56ba03-2b3c-4204-b424-1c112550332b}" sourceoutput="{1d6c7e09-e77f-466c-b1b6-81cef212212f}" destination="{41ced11f-a652-44ca-9052-953b104cd76d}" destinationinput="{944670d4-7fa4-4a89-b5a4-363949c1c45b}" />
+    <Link source="{2a56ba03-2b3c-4204-b424-1c112550332b}" sourceoutput="{6053ce80-68f3-4e71-96dc-ca5a499c3fda}" destination="{41ced11f-a652-44ca-9052-953b104cd76d}" destinationinput="{5aa7987b-f4c7-4a60-9034-c91ae473f768}" />
+    <Link source="{2a56ba03-2b3c-4204-b424-1c112550332b}" sourceoutput="{fd473f50-9b25-4746-9dbe-f87dcb4e4da9}" destination="{41ced11f-a652-44ca-9052-953b104cd76d}" destinationinput="{1462a795-8622-405b-a0af-121eccbd2daf}" />
+  </Graph>
+  <Movies />
+  <WindowLayout>
+    <DockPanel FormatVersion="1.0" DockLeftPortion="0.25" DockRightPortion="0.25" DockTopPortion="0.25" DockBottomPortion="0.25" ActiveDocumentPane="-1" ActivePane="-1">
+      <Contents Count="1">
+        <Content ID="0" PersistString="IID.FormDepth" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      </Contents>
+      <Panes Count="1">
+        <Pane ID="0" DockState="DockBottom" ActiveContent="0">
+          <Contents Count="1">
+            <Content ID="0" RefID="0" />
+          </Contents>
+        </Pane>
+      </Panes>
+      <DockWindows>
+        <DockWindow ID="0" DockState="Document" ZOrderIndex="1">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="1" DockState="DockLeft" ZOrderIndex="3">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="2" DockState="DockRight" ZOrderIndex="4">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="3" DockState="DockTop" ZOrderIndex="5">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="4" DockState="DockBottom" ZOrderIndex="2">
+          <NestedPanes Count="1">
+            <Pane ID="0" RefID="0" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+      </DockWindows>
+      <FloatWindows Count="0" />
+    </DockPanel>
+  </WindowLayout>
+  <Visualization3D userCentroidsVisible="False" userCentroidVelocitiesVisible="False" skeletonVisible="False" uiControllerVisible="False" uiPointerVisible="False" umActivationZonesVisible="False" umActivationZoneLabelsVisible="False" userBoundingBoxVisible="False" userLabelVisible="False" userPointsVisible="False" userMassCenterVisible="False" userHeightVisible="False" userBodyDirVisible="False" userPrincipalDirVisible="False" cameraFrustumVisible="False" cameraFrustumProjVisible="False" cameraInfoVisible="False" sourceColorMapVisible="False" labelImageVisible="False" scenePointsVisible="False" userMaskVisible="False" depthClipPlanesVisible="False" xyzClipPlanesVisible="False" clipVolumeVisible="False" user1Color="66FF66FF" user2Color="66CCFFFF" user3Color="FF6600FF" user4Color="FFFF00FF" uiController1Color="66FF66FF" uiController2Color="66CCFFFF" uiController3Color="FF6600FF" uiController4Color="FFFF00FF" gridColor="999999FF" gridSize="4" gridSubdivisions="16" ciPalmPositionVisible="True" ciPalmNormalVisible="True" ciPointingDirVisible="True" ciFingerTipsVisible="True" ciCentroidsVisible="True" ciMeshVisible="True" ciGrabbersVisible="True" hand1Color="66FF66FF" hand2Color="66CCFFFF">
+    <Camera>
+      <Position x="0.6" y="-0.8" z="0.6" />
+      <Orientation yaw="25" pitch="-25" />
+    </Camera>
+  </Visualization3D>
+</IisuInteractionDesignerProject>

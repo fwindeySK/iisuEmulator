@@ -1,0 +1,515 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IisuInteractionDesignerProject Version="3.0.19">
+  <Graph id="{b73e8b1b-fd51-44b0-b2b7-9d265e183773}">
+    <Node id="{cf98426f-28a3-452d-8a65-b619798cfdf6}" name="" type="iisu device">
+      <Output id="{8205e1cd-f94c-496d-a8ce-429b5731acc7}" name="CI.HAND1.PalmPosition3D" />
+      <Output id="{61c0f80f-9663-473b-a65c-e49978ac5fd7}" name="CI.HAND1.FingerTipPositions3D" />
+      <Output id="{6406a939-e630-406b-9392-9b1026e00e5f}" name="CI.HAND1.PalmNormal3D" />
+      <Output id="{2f8c72eb-f0e5-4720-81e5-f4cbf4434021}" name="CI.HAND1.TipPosition3D" />
+      <Output id="{ba4b51bc-8d48-42e1-9cbd-bcf5e554e747}" name="CI.HAND1.IsOpen" />
+      <Output id="{c4ba7070-a95f-43fa-a66d-1b04cefbfc0e}" name="CI.HAND1.Status" />
+      <Output id="{b8030088-e6e2-403b-9fbc-91c149713c67}" name="CI.HAND1.PosingGestureId" />
+      <Output id="{c9f3a007-dee2-4eac-9bd3-fc39f41b44fc}" name="CI.HAND1.PalmPosition2D" />
+      <Output id="{f4aa6670-2079-4ed6-856e-f39aa74839f7}" name="SOURCE.CAMERA.DEPTH.Width" />
+      <Output id="{7005da6b-cea4-4d01-8bb0-067dd3836c63}" name="SOURCE.CAMERA.DEPTH.Height" />
+    </Node>
+    <Node id="{4a78ecd5-2359-470f-99b7-ef8f9e68fc5e}" name="" type="iisu skeleton" />
+    <Node id="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" name="Script" type="lua script">
+      <Input id="{93ef9ca8-35ed-47ea-8e62-a4480b8377a1}" name="CI.HAND1.PalmPosition3D" />
+      <Input id="{9cd1142d-0ca1-43d5-a197-2412802ce057}" name="CI.HAND1.FingerTipPositions3D" />
+      <Input id="{8d2c7a1a-b2ea-4d73-8135-f1b27fe2537f}" name="CI.HAND1.PalmNormal3D" />
+      <Input id="{2b427c89-9bde-4b12-8d2d-418d09f00501}" name="CI.HAND1.TipPosition3D" />
+      <Input id="{64f866e7-1819-43f4-90ab-f32bd5ffdec0}" name="CI.HAND1.IsOpen" />
+      <Input id="{770446a7-edcc-4bdd-83bb-fdef8eb30e9c}" name="HorizontalCoeficient" />
+      <Input id="{46a0887f-3d78-44e6-879d-7fc9ebfeeac6}" name="VerticalCoeficient" />
+      <Input id="{a8225c6f-5cbb-4b7c-9b46-2292b6ae0d29}" name="DepthStart" />
+      <Input id="{e74e9906-1eb8-4b2b-89ad-77b9f5699e90}" name="DepthEnd" />
+      <Input id="{0f04460d-ad44-42f4-9128-6d98cca13561}" name="CI.HAND1.Status" />
+      <Input id="{1661f1bd-86ef-4218-8a66-c7c7d25b4be4}" name="CI.HAND1.PosingGestureId" />
+      <Input id="{5c6360c8-ce44-4913-809f-a0290b758394}" name="Smoothing" />
+      <Input id="{9ff2ab40-7032-428b-86c2-f940b6373d3e}" name="CI.HAND1.PalmPosition2D" />
+      <Input id="{6350452c-2fe8-496c-8d4b-c47b0b2aa02f}" name="SOURCE.CAMERA.DEPTH.Width" />
+      <Input id="{0d0a8353-4431-4fc7-848a-d9d4d8f6a11a}" name="SOURCE.CAMERA.DEPTH.Height" />
+      <Output id="{f800d9e4-395e-4362-bc61-5a8da78f18c4}" name="yawValue" />
+      <Output id="{8f7ea159-aff6-4567-bd95-894a1f6d8c2b}" name="pitchValue" />
+      <Output id="{6b19e892-e26f-427c-af99-cb0ec68c7835}" name="rollValue" />
+      <Output id="{72957984-8378-43fa-8466-02ff15df5321}" name="handClose" />
+      <Output id="{942120e4-937d-4f4a-b1fa-c5dd49d1d29b}" name="spaceOrigin" />
+      <Output id="{2ab1a206-b67b-404d-8f6b-b02780b2f510}" name="positionAmplifier" />
+      <Output id="{ca539628-c1de-45ff-afcc-666a83375efe}" name="handPosition" />
+      <Output id="{c84173c9-83b9-46db-b1a4-b444e3b98caf}" name="handHorizontal" />
+      <Output id="{34a18542-5be9-4e9c-9c8c-1be14b604f7d}" name="handVertical" />
+      <Output id="{ccd9ff26-bc63-400c-9ba7-93c2ed861b3a}" name="handDepth" />
+      <Output id="{cda19c00-2186-446c-9ca9-fcbafaa89f9f}" name="hand2DPos" />
+      <Output id="{e49792f6-b32c-4bac-8a41-dea23cbe6648}" name="handActive" />
+      <Output id="{de25f3fe-298c-48f5-a0f0-a9048f31e36f}" name="rightMouse" />
+      <Output id="{1de51734-97fd-4ab7-b4ba-6ec990f3b909}" name="key1" />
+      <Output id="{71a6bd9c-e486-4746-8c15-97c51ab4877d}" name="key2" />
+      <Output id="{582c3019-1186-4365-94a4-521fcd63504d}" name="key3" />
+      <Output id="{48256540-6a46-4b11-b396-7493adef7ee3}" name="handHorizontalsmooth" />
+      <Output id="{5cdd02d5-887f-4d32-a000-7d9fe0d798d7}" name="handVerticalsmooth" />
+      <Output id="{60436a70-7805-4e34-ab92-b598affed19e}" name="handDepthsmooth" />
+      <Output id="{3d0f66e4-45b1-40dd-b6b8-a88d3f1f10cf}" name="throw" />
+      <Output id="{e74608fb-138c-4103-896c-5c97c19c537d}" name="throwCounter" />
+      <Output id="{006f7eed-21bd-4d24-83ff-ef184909feac}" name="throwStart" />
+      <CustomParameter id="{f800d9e4-395e-4362-bc61-5a8da78f18c4}" />
+      <CustomParameter id="{8f7ea159-aff6-4567-bd95-894a1f6d8c2b}" />
+      <CustomParameter id="{6b19e892-e26f-427c-af99-cb0ec68c7835}" />
+      <CustomParameter id="{72957984-8378-43fa-8466-02ff15df5321}" />
+      <CustomParameter id="{c84173c9-83b9-46db-b1a4-b444e3b98caf}" />
+      <CustomParameter id="{34a18542-5be9-4e9c-9c8c-1be14b604f7d}" />
+      <CustomParameter id="{ccd9ff26-bc63-400c-9ba7-93c2ed861b3a}" />
+      <CustomParameter id="{e49792f6-b32c-4bac-8a41-dea23cbe6648}" />
+      <CustomParameter id="{de25f3fe-298c-48f5-a0f0-a9048f31e36f}" />
+      <CustomParameter id="{1de51734-97fd-4ab7-b4ba-6ec990f3b909}" />
+      <CustomParameter id="{71a6bd9c-e486-4746-8c15-97c51ab4877d}" />
+      <CustomParameter id="{582c3019-1186-4365-94a4-521fcd63504d}" />
+      <CustomParameter id="{48256540-6a46-4b11-b396-7493adef7ee3}" />
+      <CustomParameter id="{5cdd02d5-887f-4d32-a000-7d9fe0d798d7}" />
+      <CustomParameter id="{60436a70-7805-4e34-ab92-b598affed19e}" />
+      <CustomParameter id="{3d0f66e4-45b1-40dd-b6b8-a88d3f1f10cf}" />
+      <Content><![CDATA[--Script used for CI: Hand Position, Hand Orientation Hand Open/Close State--
+
+
+function init()
+
+--CI Origin (center of space)
+spaceOrigin = {0,0.5,0};
+handPosition = SK.Vector3();
+hand2DPos = SK.Vector2();
+horizontalDist = HorizontalCoeficient;
+verticalDist = VerticalCoeficient;
+depthLimitStart = DepthStart;
+depthLimitEnd = DepthEnd;
+handActive = false;
+handClose = false;
+Smooth_handHorizontal = SK.Average() -- Move this line to init()
+Smooth_handVertical = SK.Average() -- Move this line to init()
+Smooth_handDepth = SK.Average() -- Move this line to init()
+smoothAmount = Smoothing;
+throw = false;
+startStart = false;
+
+horizontalPointingLeftBorder = 30
+	horizontalPointingRightBorder = 30
+	verticalPointingTopBorder = 30
+	verticalPointingBottomBorder = 30
+	
+end
+
+function getHandHorizontalNormalized(ciPalm2D, cameraDepthWidth)
+
+	horizontal2D = SK.Math_clamp(ciPalm2D.x, horizontalPointingLeftBorder, cameraDepthWidth - horizontalPointingRightBorder)
+
+	return (horizontal2D - horizontalPointingLeftBorder)/(cameraDepthWidth - (horizontalPointingLeftBorder + horizontalPointingRightBorder))
+
+end
+
+function getHandVerticalNormalized(ciPalm2D, cameraDepthHeight)
+
+	vertical2D = SK.Math_clamp(ciPalm2D.y, verticalPointingTopBorder, cameraDepthHeight - verticalPointingBottomBorder)
+
+	return (vertical2D - verticalPointingTopBorder)/(cameraDepthHeight - (verticalPointingBottomBorder + verticalPointingTopBorder))
+
+end
+
+
+--clamp function
+function clamp(value,min,max)
+if value>max
+then value = max
+end
+if value<min
+then value = min
+end
+return value
+end
+
+
+--normalize function
+function normalize(inValue, lowRange, highRange)
+return ((inValue - lowRange)/(highRange - lowRange));
+end
+
+
+
+function main()
+
+throw = false;
+
+--Position of palm/hand
+ciHandPos = CI_HAND1_PalmPosition3D;
+
+--Orientation of palm/hand
+palmOrient = CI_HAND1_PalmNormal3D;
+
+--the endpoint of the hand, located at some average point at end of fingers tip
+fingerTip = CI_HAND1_TipPosition3D;
+
+--vector point from center of hand to fingerTip
+topVector = fingerTip - CI_HAND1_PalmPosition3D;
+
+
+--cross product to obtain local right pointing vector for palm 
+--and up pointing vector for palm
+rightAxis = palmOrient:cross(SK.Axis_UP);
+upAxis = rightAxis:cross(palmOrient);
+
+
+--get the rightAxis vector comging from palmcenter
+localRightAxis = ciHandPos + rightAxis;
+
+
+
+
+---------------YAW--------------------
+--get the yaw angle
+yawAngle = SK.axisAngle(palmOrient, SK.Axis_FRONT, SK.Axis_RIGHT)+90;
+yawValue = yawAngle/180;
+yawValue = clamp(yawValue,0,1);
+--------------------------------------
+ 
+
+
+-------------PITCH--------------------
+--get the pitchAngle angle
+pitchAngle = SK.axisAngle(palmOrient, SK.Axis_FRONT, SK.Axis_UP)+90;
+pitchValue = pitchAngle/180;
+pitchValue = clamp(pitchValue,0,1);
+--------------------------------------
+
+
+-------------ROLL--------------------
+--get the roll angle
+rollAngle = SK.axisAngle(topVector,upAxis, localRightAxis)+90;
+rollAngle = math.max(0, math.min(180,rollAngle));
+rollValue = rollAngle/180;
+rollValue = clamp(rollValue,0,1);
+--------------------------------------
+
+
+
+------------POSITION------------------
+
+handPosition.x = -ciHandPos.x;
+handPosition.y = ciHandPos.y;
+handPosition.z = -ciHandPos.z;
+
+--Amplifier based on hand distance to cam
+positionAmplifier = math.sqrt(-math.pow(handPosition.y,2)+ 0.8429);
+
+
+
+------Hand Horizontal Position-------------
+handPosition.x = handPosition.x * positionAmplifier;
+handPosition.x = clamp(handPosition.x, -horizontalDist, horizontalDist)
+
+--normalize
+handHorizontal = normalize(handPosition.x, -horizontalDist, horizontalDist);
+-------------------------------------------
+
+
+
+------Hand Vertical Position--------------
+handPosition.z = handPosition.z * positionAmplifier;
+handPosition.z = clamp(handPosition.z, -verticalDist, verticalDist)
+
+--normalize
+handVertical = normalize(handPosition.z, -verticalDist, verticalDist);
+-------------------------------------------
+
+
+
+
+------Hand Depth Position------------------
+handPosition.y = clamp(handPosition.y, depthLimitStart,depthLimitEnd);
+handDepth = handPosition.y;
+
+--normalize 
+handDepth = normalize(handDepth, depthLimitStart, depthLimitEnd)
+
+-------------------------------------------
+
+
+
+
+------------HAND STATES---------------
+
+
+---------HAND1 ACTIVE/INNACTIVE-------
+if (CI_HAND1_Status >=1)
+then handActive = true;
+else handActive = false;
+end
+--------------------------------------
+
+
+------------CLOSE/OPEN - THROW----------------
+
+if (CI_HAND1_IsOpen)
+
+then handClose =  false;
+
+	if(throwStart)
+	then 	
+	throwStart = false;
+	throw = true;
+	end
+
+else handClose = true;
+
+	if(not throwStart)
+	then throwStart = true;
+	throw = false;
+	end
+
+
+end
+--------------------------------------
+
+
+
+
+---------HAND1 GESTURES ID-------------
+handGesture = CI_HAND1_PosingGestureId;
+if (handGesture == 6)
+then key1 = false; key2 = false; key3 = false; rightMouse = false;
+
+elseif (handGesture == 4)
+then key1 = true; key2 = false; key3 = false; rightMouse = false;
+
+elseif (handGesture == 15)
+then key1 = false; key2 = true; key3 = false; rightMouse = true;
+
+elseif (handGesture == 9)
+then key1 = false; key2 = false; key3 = true; rightMouse = false;
+
+else
+key1 = false; key2 = false; key3 = false; rightMouse = false;
+end
+--------------------------------------
+
+handHorizontal = 1 - getHandHorizontalNormalized(CI_HAND1_PalmPosition2D, SOURCE_CAMERA_DEPTH_Width) 
+handVertical = getHandVerticalNormalized(CI_HAND1_PalmPosition2D, SOURCE_CAMERA_DEPTH_Height)
+
+----------------SMOOTHED HAND POSITIONS-------------------------------
+handHorizontalsmooth = Smooth_handHorizontal:update(handHorizontal, Smoothing)
+
+handVerticalsmooth = Smooth_handVertical:update(handVertical, Smoothing)
+
+handDepthsmooth = Smooth_handDepth:update(handDepth, Smoothing)
+---------------------------------------------------------------------
+
+
+
+
+--for cartesian 2D data chart visualization
+hand2DPos.x = handHorizontal;
+hand2DPos.y = handVertical;
+
+--------------------------------------
+end
+
+]]></Content>
+    </Node>
+    <Link source="{cf98426f-28a3-452d-8a65-b619798cfdf6}" sourceoutput="{8205e1cd-f94c-496d-a8ce-429b5731acc7}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{93ef9ca8-35ed-47ea-8e62-a4480b8377a1}" />
+    <Link source="{cf98426f-28a3-452d-8a65-b619798cfdf6}" sourceoutput="{61c0f80f-9663-473b-a65c-e49978ac5fd7}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{9cd1142d-0ca1-43d5-a197-2412802ce057}" />
+    <Link source="{cf98426f-28a3-452d-8a65-b619798cfdf6}" sourceoutput="{6406a939-e630-406b-9392-9b1026e00e5f}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{8d2c7a1a-b2ea-4d73-8135-f1b27fe2537f}" />
+    <Link source="{cf98426f-28a3-452d-8a65-b619798cfdf6}" sourceoutput="{2f8c72eb-f0e5-4720-81e5-f4cbf4434021}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{2b427c89-9bde-4b12-8d2d-418d09f00501}" />
+    <Link source="{cf98426f-28a3-452d-8a65-b619798cfdf6}" sourceoutput="{ba4b51bc-8d48-42e1-9cbd-bcf5e554e747}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{64f866e7-1819-43f4-90ab-f32bd5ffdec0}" />
+    <Link source="{c37abba0-2102-4589-82e2-b8c39251e3be}" sourceoutput="{a5296b8b-a774-4db1-94fb-9c87d76699c2}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{770446a7-edcc-4bdd-83bb-fdef8eb30e9c}" />
+    <Link source="{27112d27-3a8e-41d7-98ef-4c81b0a123a4}" sourceoutput="{427f602f-8f70-474d-9e77-99d0f960562b}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{46a0887f-3d78-44e6-879d-7fc9ebfeeac6}" />
+    <Link source="{55101ecd-9f05-4a52-8af8-bec13715f1a4}" sourceoutput="{b99b8b90-89d5-42a2-b890-957b1e476714}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{a8225c6f-5cbb-4b7c-9b46-2292b6ae0d29}" />
+    <Link source="{8ac3dd92-e324-43d5-b1dc-9c283a78a144}" sourceoutput="{32f65d59-6dcd-47af-a711-8a73fad944e5}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{e74e9906-1eb8-4b2b-89ad-77b9f5699e90}" />
+    <Link source="{cf98426f-28a3-452d-8a65-b619798cfdf6}" sourceoutput="{c4ba7070-a95f-43fa-a66d-1b04cefbfc0e}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{0f04460d-ad44-42f4-9128-6d98cca13561}" />
+    <Link source="{cf98426f-28a3-452d-8a65-b619798cfdf6}" sourceoutput="{b8030088-e6e2-403b-9fbc-91c149713c67}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{1661f1bd-86ef-4218-8a66-c7c7d25b4be4}" />
+    <Link source="{86094a94-e615-4c4b-a859-d00264c4837f}" sourceoutput="{ad66f865-1139-4fa5-a1c8-ca2e4ad78ede}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{5c6360c8-ce44-4913-809f-a0290b758394}" />
+    <Link source="{cf98426f-28a3-452d-8a65-b619798cfdf6}" sourceoutput="{c9f3a007-dee2-4eac-9bd3-fc39f41b44fc}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{9ff2ab40-7032-428b-86c2-f940b6373d3e}" />
+    <Link source="{cf98426f-28a3-452d-8a65-b619798cfdf6}" sourceoutput="{f4aa6670-2079-4ed6-856e-f39aa74839f7}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{6350452c-2fe8-496c-8d4b-c47b0b2aa02f}" />
+    <Link source="{cf98426f-28a3-452d-8a65-b619798cfdf6}" sourceoutput="{7005da6b-cea4-4d01-8bb0-067dd3836c63}" destination="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" destinationinput="{0d0a8353-4431-4fc7-848a-d9d4d8f6a11a}" />
+    <Node id="{7e1dbf7d-210b-4002-b213-f7045a9957ab}" name="Orientation" type="visualizer:1d">
+      <Input id="{e87de956-6a69-4443-919e-58d90e4556a4}" name="yawValue" />
+      <Input id="{77f2cf0a-1b50-4ef6-bd8c-eab3730f1500}" name="pitchValue" />
+      <Input id="{dfd20343-e412-4fe9-889e-cd059eb5cc46}" name="rollValue" />
+    </Node>
+    <Link source="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" sourceoutput="{f800d9e4-395e-4362-bc61-5a8da78f18c4}" destination="{7e1dbf7d-210b-4002-b213-f7045a9957ab}" destinationinput="{e87de956-6a69-4443-919e-58d90e4556a4}" />
+    <Link source="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" sourceoutput="{8f7ea159-aff6-4567-bd95-894a1f6d8c2b}" destination="{7e1dbf7d-210b-4002-b213-f7045a9957ab}" destinationinput="{77f2cf0a-1b50-4ef6-bd8c-eab3730f1500}" />
+    <Link source="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" sourceoutput="{6b19e892-e26f-427c-af99-cb0ec68c7835}" destination="{7e1dbf7d-210b-4002-b213-f7045a9957ab}" destinationinput="{dfd20343-e412-4fe9-889e-cd059eb5cc46}" />
+    <Node id="{bbda0624-da4e-461f-b488-93331ded97ef}" name="spaceOrigin" type="primitive3d:sphere">
+      <Input id="{b5c10d04-d0e8-49e9-a0f7-0ee37ddbcfdb}" name="spaceOrigin" />
+      <Property name="Radius" value="0.01" />
+      <Property name="Color" value="( r=0.8000001; g=0.8000001; b=0.8000001; a=1 )" />
+      <Property name="Selected" value="False" />
+      <Property name="Position" value="( x=0; y=0; z=0 )" input="{b5c10d04-d0e8-49e9-a0f7-0ee37ddbcfdb}" />
+      <Property name="Scale" value="( x=0.01; y=0.01; z=0.01 )" />
+      <Property name="ForceCull" value="False" />
+    </Node>
+    <Node id="{428f3c97-447e-4bb7-864c-bd63ce121c1a}" name="Open/Close" type="visualizer:label">
+      <Input id="{ba35db55-b35e-413b-85cb-41e6eb2f4acf}" name="handClose" />
+    </Node>
+    <Link source="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" sourceoutput="{72957984-8378-43fa-8466-02ff15df5321}" destination="{428f3c97-447e-4bb7-864c-bd63ce121c1a}" destinationinput="{ba35db55-b35e-413b-85cb-41e6eb2f4acf}" />
+    <Node id="{fc178533-c7c6-4528-9c3d-b3bf3931653c}" name="Position" type="visualizer:1d">
+      <Input id="{f9291005-90cb-4ca5-a61d-f224cead3b68}" name="handHorizontal" />
+      <Input id="{e044fcf7-77be-4989-93bb-e984a30dbbb7}" name="handVertical" />
+      <Input id="{0f532926-401d-429e-b940-1840770d1034}" name="handDepth" />
+      <Input id="{6e001277-5de6-4b02-b3f4-ce517b9d4e74}" name="handHorizontalsmooth" />
+    </Node>
+    <Link source="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" sourceoutput="{c84173c9-83b9-46db-b1a4-b444e3b98caf}" destination="{fc178533-c7c6-4528-9c3d-b3bf3931653c}" destinationinput="{f9291005-90cb-4ca5-a61d-f224cead3b68}" />
+    <Link source="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" sourceoutput="{34a18542-5be9-4e9c-9c8c-1be14b604f7d}" destination="{fc178533-c7c6-4528-9c3d-b3bf3931653c}" destinationinput="{e044fcf7-77be-4989-93bb-e984a30dbbb7}" />
+    <Link source="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" sourceoutput="{ccd9ff26-bc63-400c-9ba7-93c2ed861b3a}" destination="{fc178533-c7c6-4528-9c3d-b3bf3931653c}" destinationinput="{0f532926-401d-429e-b940-1840770d1034}" />
+    <Link source="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" sourceoutput="{48256540-6a46-4b11-b396-7493adef7ee3}" destination="{fc178533-c7c6-4528-9c3d-b3bf3931653c}" destinationinput="{6e001277-5de6-4b02-b3f4-ce517b9d4e74}" />
+    <Node id="{b3e15493-047c-4080-9639-1c51e3df7855}" name="2DPosition" type="visualizer:2d">
+      <Input id="{8cadd9ae-1aec-4e95-a60c-d03d8ead1714}" name="hand2DPos" />
+    </Node>
+    <Link source="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" sourceoutput="{cda19c00-2186-446c-9ca9-fcbafaa89f9f}" destination="{b3e15493-047c-4080-9639-1c51e3df7855}" destinationinput="{8cadd9ae-1aec-4e95-a60c-d03d8ead1714}" />
+    <Node id="{4bdfe593-92d2-4a24-aefb-8a9869f52801}" name="Depth" type="visualizer:gauge">
+      <Input id="{c23fbef0-d4aa-4515-859d-73fac7ffa8d0}" name="handDepth" />
+    </Node>
+    <Link source="{5ba8cfcd-e9e4-4686-b457-5d9009524387}" sourceoutput="{ccd9ff26-bc63-400c-9ba7-93c2ed861b3a}" destination="{4bdfe593-92d2-4a24-aefb-8a9869f52801}" destinationinput="{c23fbef0-d4aa-4515-859d-73fac7ffa8d0}" />
+    <Node id="{c37abba0-2102-4589-82e2-b8c39251e3be}" name="HorizontalCoeficient" type="input:slider">
+      <Value value="0.1" min="0" max="1" />
+      <Output id="{a5296b8b-a774-4db1-94fb-9c87d76699c2}" name="HorizontalCoeficient" />
+    </Node>
+    <Node id="{27112d27-3a8e-41d7-98ef-4c81b0a123a4}" name="VerticalCoeficient" type="input:slider">
+      <Value value="0.1" min="0" max="1" />
+      <Output id="{427f602f-8f70-474d-9e77-99d0f960562b}" name="VerticalCoeficient" />
+    </Node>
+    <Node id="{55101ecd-9f05-4a52-8af8-bec13715f1a4}" name="DepthStart" type="input:slider">
+      <Value value="0.2" min="0" max="1" />
+      <Output id="{b99b8b90-89d5-42a2-b890-957b1e476714}" name="DepthStart" />
+    </Node>
+    <Node id="{8ac3dd92-e324-43d5-b1dc-9c283a78a144}" name="DepthEnd" type="input:slider">
+      <Value value="1" min="0" max="2" />
+      <Output id="{32f65d59-6dcd-47af-a711-8a73fad944e5}" name="DepthEnd" />
+    </Node>
+    <Node id="{86094a94-e615-4c4b-a859-d00264c4837f}" name="Smoothing" type="input:slider">
+      <Value value="0.948" min="0" max="1" />
+      <Output id="{ad66f865-1139-4fa5-a1c8-ca2e4ad78ede}" name="Smoothing" />
+    </Node>
+  </Graph>
+  <Movies>
+    <Movie id="21-07-A9-40-EE-53-B8-E4-B9-AD-00-30-16-5C-07-90" />
+  </Movies>
+  <WindowLayout>
+    <DockPanel FormatVersion="1.0" DockLeftPortion="0.25" DockRightPortion="0.25" DockTopPortion="0.25" DockBottomPortion="0.160082008898424" ActiveDocumentPane="10" ActivePane="-1">
+      <Contents Count="11">
+        <Content ID="0" PersistString="IID.FormDepth" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="1" PersistString="{7e1dbf7d-210b-4002-b213-f7045a9957ab}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="2" PersistString="{fc178533-c7c6-4528-9c3d-b3bf3931653c}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="3" PersistString="{428f3c97-447e-4bb7-864c-bd63ce121c1a}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="4" PersistString="{b3e15493-047c-4080-9639-1c51e3df7855}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="5" PersistString="{4bdfe593-92d2-4a24-aefb-8a9869f52801}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="6" PersistString="{c37abba0-2102-4589-82e2-b8c39251e3be}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="7" PersistString="{27112d27-3a8e-41d7-98ef-4c81b0a123a4}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="8" PersistString="{55101ecd-9f05-4a52-8af8-bec13715f1a4}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="9" PersistString="{8ac3dd92-e324-43d5-b1dc-9c283a78a144}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+        <Content ID="10" PersistString="{86094a94-e615-4c4b-a859-d00264c4837f}" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      </Contents>
+      <Panes Count="11">
+        <Pane ID="0" DockState="DockBottom" ActiveContent="0">
+          <Contents Count="1">
+            <Content ID="0" RefID="0" />
+          </Contents>
+        </Pane>
+        <Pane ID="1" DockState="Document" ActiveContent="1">
+          <Contents Count="1">
+            <Content ID="0" RefID="1" />
+          </Contents>
+        </Pane>
+        <Pane ID="2" DockState="Document" ActiveContent="2">
+          <Contents Count="1">
+            <Content ID="0" RefID="2" />
+          </Contents>
+        </Pane>
+        <Pane ID="3" DockState="Document" ActiveContent="4">
+          <Contents Count="1">
+            <Content ID="0" RefID="4" />
+          </Contents>
+        </Pane>
+        <Pane ID="4" DockState="Document" ActiveContent="5">
+          <Contents Count="1">
+            <Content ID="0" RefID="5" />
+          </Contents>
+        </Pane>
+        <Pane ID="5" DockState="Document" ActiveContent="7">
+          <Contents Count="1">
+            <Content ID="0" RefID="7" />
+          </Contents>
+        </Pane>
+        <Pane ID="6" DockState="Document" ActiveContent="6">
+          <Contents Count="1">
+            <Content ID="0" RefID="6" />
+          </Contents>
+        </Pane>
+        <Pane ID="7" DockState="Document" ActiveContent="8">
+          <Contents Count="1">
+            <Content ID="0" RefID="8" />
+          </Contents>
+        </Pane>
+        <Pane ID="8" DockState="Document" ActiveContent="9">
+          <Contents Count="1">
+            <Content ID="0" RefID="9" />
+          </Contents>
+        </Pane>
+        <Pane ID="9" DockState="Document" ActiveContent="3">
+          <Contents Count="1">
+            <Content ID="0" RefID="3" />
+          </Contents>
+        </Pane>
+        <Pane ID="10" DockState="Document" ActiveContent="10">
+          <Contents Count="1">
+            <Content ID="0" RefID="10" />
+          </Contents>
+        </Pane>
+      </Panes>
+      <DockWindows>
+        <DockWindow ID="0" DockState="Document" ZOrderIndex="1">
+          <NestedPanes Count="10">
+            <Pane ID="0" RefID="1" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+            <Pane ID="1" RefID="2" PrevPane="1" Alignment="Bottom" Proportion="0.47446932391496" />
+            <Pane ID="2" RefID="3" PrevPane="2" Alignment="Left" Proportion="0.436392075078206" />
+            <Pane ID="3" RefID="4" PrevPane="3" Alignment="Right" Proportion="0.354958984833811" />
+            <Pane ID="4" RefID="5" PrevPane="1" Alignment="Right" Proportion="0.224713242961418" />
+            <Pane ID="5" RefID="6" PrevPane="5" Alignment="Top" Proportion="0.282615178172059" />
+            <Pane ID="6" RefID="7" PrevPane="5" Alignment="Bottom" Proportion="0.733044733044733" />
+            <Pane ID="7" RefID="8" PrevPane="7" Alignment="Bottom" Proportion="0.664179104477612" />
+            <Pane ID="8" RefID="9" PrevPane="4" Alignment="Bottom" Proportion="0.5" />
+            <Pane ID="9" RefID="10" PrevPane="8" Alignment="Bottom" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+        <DockWindow ID="1" DockState="DockLeft" ZOrderIndex="3">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="2" DockState="DockRight" ZOrderIndex="4">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="3" DockState="DockTop" ZOrderIndex="5">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="4" DockState="DockBottom" ZOrderIndex="2">
+          <NestedPanes Count="1">
+            <Pane ID="0" RefID="0" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+      </DockWindows>
+      <FloatWindows Count="0" />
+    </DockPanel>
+    <Window node="{7e1dbf7d-210b-4002-b213-f7045a9957ab}" type="visualizer:1d">
+      <Scale miny="-0.0528345522023985" maxy="1.0271654477976" majorstepy="0.2" minorstepy="0.05" />
+    </Window>
+    <Window node="{fc178533-c7c6-4528-9c3d-b3bf3931653c}" type="visualizer:1d">
+      <Scale miny="0.958768354574977" maxy="0.998035065324372" majorstepy="0.1" minorstepy="0.02" />
+    </Window>
+    <Window node="{b3e15493-047c-4080-9639-1c51e3df7855}" type="visualizer:2d">
+      <View view="Front" />
+      <Scale left="0.0906929263939408" right="1.01120400825794" top="0.934150521768615" bottom="0.0136394399046149" />
+    </Window>
+    <Window node="{4bdfe593-92d2-4a24-aefb-8a9869f52801}" type="visualizer:gauge" minRange="0" maxRange="1" majorUnit="0.5" minorUnit="0.25" edgeValuesRefreshTime="5.00000005843049" autoStretchBoundaries="True" stretchBoundariesSymmetrically="False" />
+  </WindowLayout>
+  <Visualization3D userCentroidsVisible="False" userCentroidVelocitiesVisible="False" skeletonVisible="False" uiControllerVisible="False" uiPointerVisible="False" umActivationZonesVisible="False" umActivationZoneLabelsVisible="False" userBoundingBoxVisible="False" userLabelVisible="False" userPointsVisible="False" userMassCenterVisible="False" userHeightVisible="False" userBodyDirVisible="False" userPrincipalDirVisible="False" cameraFrustumVisible="False" cameraFrustumProjVisible="False" cameraInfoVisible="False" sourceColorMapVisible="False" labelImageVisible="False" scenePointsVisible="False" userMaskVisible="False" depthClipPlanesVisible="False" xyzClipPlanesVisible="False" clipVolumeVisible="False" user1Color="66FF66FF" user2Color="66CCFFFF" user3Color="FF6600FF" user4Color="FFFF00FF" uiController1Color="66FF66FF" uiController2Color="66CCFFFF" uiController3Color="FF6600FF" uiController4Color="FFFF00FF" gridColor="999999FF" gridSize="4" gridSubdivisions="16" ciPalmPositionVisible="True" ciPalmNormalVisible="True" ciPointingDirVisible="True" ciFingerTipsVisible="True" ciCentroidsVisible="False" ciMeshVisible="False" hand1Color="66FF66FF" hand2Color="66CCFFFF">
+    <Camera>
+      <Position x="0.005547567" y="1.780899" z="0.3667169" />
+      <Orientation yaw="177.0004" pitch="-8.999887" />
+    </Camera>
+  </Visualization3D>
+</IisuInteractionDesignerProject>

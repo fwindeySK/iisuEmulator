@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IisuInteractionDesignerProject Version="3.0.19">
+  <Graph id="{cac69bfa-50ee-4894-9448-fa3f9906087f}">
+    <Node id="{bc438412-56d9-49be-8963-d8f909167e4f}" name="" type="iisu device">
+      <Output id="{ec80afe4-42b0-4629-812c-d6f3f1a7aacd}" name="CI.HAND1.PalmPosition2D" />
+      <Output id="{b3dfff3e-bd35-4df7-a1d2-f81be0a3740d}" name="CI.HAND1.IsOpen" />
+      <Output id="{befa225a-e241-4d92-b747-6123872e7dae}" name="SOURCE.CAMERA.DEPTH.Width" />
+      <Output id="{ec1c0ca9-9dd1-4bfa-b630-f6a9337e27eb}" name="SOURCE.CAMERA.DEPTH.Height" />
+      <Output id="{30771a0b-24ac-4f20-a959-e2338e977110}" name="CI.HAND1.Status" />
+    </Node>
+    <Node id="{5af78c8f-ebbd-47ec-8df9-21df7ff7d7bc}" name="" type="iisu skeleton" />
+    <Node id="{30217da9-5e6d-4d1f-a965-7b0b6b2eb507}" name="Script" type="lua script">
+      <Input id="{0bcd79f0-8626-4b4c-bb94-35e1b6cf830b}" name="CI.HAND1.PalmPosition2D" />
+      <Input id="{95e98913-f2fe-493a-ad0d-e40c624fef46}" name="CI.HAND1.IsOpen" />
+      <Input id="{76da2291-cac7-4e29-af99-65a7a6bf23bd}" name="SOURCE.CAMERA.DEPTH.Width" />
+      <Input id="{f83f0287-ae3e-4683-a0f9-3ef2af28e761}" name="SOURCE.CAMERA.DEPTH.Height" />
+      <Input id="{ce7c5f0d-2b33-4d92-b923-01766fef1509}" name="CI.HAND1.Status" />
+      <Output id="{e4e23efa-59cf-455e-a4c6-2f6eb5d34121}" name="handIsClosed" />
+      <Output id="{b46b5c45-daf2-475e-a6e9-7756ab6217dc}" name="horizontalPosition" />
+      <Output id="{67ff9205-e20c-46ab-b261-0b540f8a9aa9}" name="verticalPosition" />
+      <Output id="{34457464-42c4-400d-ac84-14ecc53a8043}" name="horizontal2D" />
+      <Output id="{377c344a-7808-4539-84b5-981a6941a158}" name="vertical2D" />
+      <Output id="{1336aa48-2f36-415f-9f64-bd804d0eba88}" name="hand1IsActive" />
+      <CustomParameter id="{e4e23efa-59cf-455e-a4c6-2f6eb5d34121}" />
+      <CustomParameter id="{b46b5c45-daf2-475e-a6e9-7756ab6217dc}" />
+      <CustomParameter id="{67ff9205-e20c-46ab-b261-0b540f8a9aa9}" />
+      <CustomParameter id="{1336aa48-2f36-415f-9f64-bd804d0eba88}" />
+      <Content><![CDATA[function init()
+
+	handsClosedAmountOfSamples = 5 --amount of samples in the open/close filter
+	
+	handsClosedSamples = {}
+	for i=1, handsClosedAmountOfSamples, 1 do
+		handsClosedSamples[i] = false
+	end
+
+	handsClosedIndex = 1
+	handIsClosed = false
+	
+	horizontalPointingLeftBorder = 30
+	horizontalPointingRightBorder = 30
+	verticalPointingTopBorder = 30
+	verticalPointingBottomBorder = 30
+
+	hand1Active = false
+	
+end
+
+function getHandClosedState(handClosed)
+
+	handsClosedSamples[handsClosedIndex] = handClosed
+	handsClosedIndex = handsClosedIndex + 1
+	if handsClosedIndex == handsClosedAmountOfSamples + 1 then
+		handsClosedIndex = 1
+	end
+	amountOfClosedSamples = 0
+	for i=1, handsClosedAmountOfSamples, 1 do
+	
+		if handsClosedSamples[i] == true then
+			amountOfClosedSamples = amountOfClosedSamples + 1
+		end
+	
+	end
+	
+	if not handIsClosed then 
+		
+		if amountOfClosedSamples == 5 then
+			handIsClosed = true
+		end
+		
+	else
+	
+		if amountOfClosedSamples == 0 then
+			handIsClosed = false
+		end
+	
+	end
+
+	return handIsClosed
+	
+end
+
+function getHandHorizontalNormalized(ciPalm2D, cameraDepthWidth)
+
+	horizontal2D = SK.Math_clamp(ciPalm2D.x, horizontalPointingLeftBorder, cameraDepthWidth - horizontalPointingRightBorder)
+
+	return (horizontal2D - horizontalPointingLeftBorder)/(cameraDepthWidth - (horizontalPointingLeftBorder + horizontalPointingRightBorder))
+
+end
+
+function getHandVerticalNormalized(ciPalm2D, cameraDepthHeight)
+
+	vertical2D = SK.Math_clamp(ciPalm2D.y, verticalPointingTopBorder, cameraDepthHeight - verticalPointingBottomBorder)
+
+	return (vertical2D - verticalPointingTopBorder)/(cameraDepthHeight - (verticalPointingBottomBorder + verticalPointingTopBorder))
+
+end
+
+function main()
+
+	handIsClosed = getHandClosedState(not CI_HAND1_IsOpen)
+	
+	horizontalPosition = 1 - getHandHorizontalNormalized(CI_HAND1_PalmPosition2D, SOURCE_CAMERA_DEPTH_Width)
+	verticalPosition = getHandVerticalNormalized(CI_HAND1_PalmPosition2D, SOURCE_CAMERA_DEPTH_Height)
+	
+	if CI_HAND1_Status >= 1 then
+			hand1IsActive = true
+	else
+			hand1IsActive = false
+	end
+	
+end
+]]></Content>
+    </Node>
+    <Link source="{bc438412-56d9-49be-8963-d8f909167e4f}" sourceoutput="{ec80afe4-42b0-4629-812c-d6f3f1a7aacd}" destination="{30217da9-5e6d-4d1f-a965-7b0b6b2eb507}" destinationinput="{0bcd79f0-8626-4b4c-bb94-35e1b6cf830b}" />
+    <Link source="{bc438412-56d9-49be-8963-d8f909167e4f}" sourceoutput="{b3dfff3e-bd35-4df7-a1d2-f81be0a3740d}" destination="{30217da9-5e6d-4d1f-a965-7b0b6b2eb507}" destinationinput="{95e98913-f2fe-493a-ad0d-e40c624fef46}" />
+    <Link source="{bc438412-56d9-49be-8963-d8f909167e4f}" sourceoutput="{befa225a-e241-4d92-b747-6123872e7dae}" destination="{30217da9-5e6d-4d1f-a965-7b0b6b2eb507}" destinationinput="{76da2291-cac7-4e29-af99-65a7a6bf23bd}" />
+    <Link source="{bc438412-56d9-49be-8963-d8f909167e4f}" sourceoutput="{ec1c0ca9-9dd1-4bfa-b630-f6a9337e27eb}" destination="{30217da9-5e6d-4d1f-a965-7b0b6b2eb507}" destinationinput="{f83f0287-ae3e-4683-a0f9-3ef2af28e761}" />
+    <Link source="{bc438412-56d9-49be-8963-d8f909167e4f}" sourceoutput="{30771a0b-24ac-4f20-a959-e2338e977110}" destination="{30217da9-5e6d-4d1f-a965-7b0b6b2eb507}" destinationinput="{ce7c5f0d-2b33-4d92-b923-01766fef1509}" />
+  </Graph>
+  <Movies />
+  <WindowLayout>
+    <DockPanel FormatVersion="1.0" DockLeftPortion="0.25" DockRightPortion="0.25" DockTopPortion="0.25" DockBottomPortion="0.25" ActiveDocumentPane="-1" ActivePane="-1">
+      <Contents Count="1">
+        <Content ID="0" PersistString="IID.FormDepth" AutoHidePortion="0.25" IsHidden="False" IsFloat="False" />
+      </Contents>
+      <Panes Count="1">
+        <Pane ID="0" DockState="DockBottom" ActiveContent="0">
+          <Contents Count="1">
+            <Content ID="0" RefID="0" />
+          </Contents>
+        </Pane>
+      </Panes>
+      <DockWindows>
+        <DockWindow ID="0" DockState="Document" ZOrderIndex="1">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="1" DockState="DockLeft" ZOrderIndex="3">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="2" DockState="DockRight" ZOrderIndex="4">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="3" DockState="DockTop" ZOrderIndex="5">
+          <NestedPanes Count="0" />
+        </DockWindow>
+        <DockWindow ID="4" DockState="DockBottom" ZOrderIndex="2">
+          <NestedPanes Count="1">
+            <Pane ID="0" RefID="0" PrevPane="-1" Alignment="Right" Proportion="0.5" />
+          </NestedPanes>
+        </DockWindow>
+      </DockWindows>
+      <FloatWindows Count="0" />
+    </DockPanel>
+  </WindowLayout>
+  <Visualization3D userCentroidsVisible="False" userCentroidVelocitiesVisible="False" skeletonVisible="False" uiControllerVisible="False" uiPointerVisible="False" umActivationZonesVisible="False" umActivationZoneLabelsVisible="False" userBoundingBoxVisible="False" userLabelVisible="False" userPointsVisible="False" userMassCenterVisible="False" userHeightVisible="False" userBodyDirVisible="False" userPrincipalDirVisible="False" cameraFrustumVisible="False" cameraFrustumProjVisible="False" cameraInfoVisible="False" sourceColorMapVisible="False" labelImageVisible="False" scenePointsVisible="False" userMaskVisible="False" depthClipPlanesVisible="False" xyzClipPlanesVisible="False" clipVolumeVisible="False" user1Color="66FF66FF" user2Color="66CCFFFF" user3Color="FF6600FF" user4Color="FFFF00FF" uiController1Color="66FF66FF" uiController2Color="66CCFFFF" uiController3Color="FF6600FF" uiController4Color="FFFF00FF" gridColor="999999FF" gridSize="4" gridSubdivisions="16" ciPalmPositionVisible="True" ciPalmNormalVisible="True" ciPointingDirVisible="True" ciFingerTipsVisible="True" ciCentroidsVisible="True" ciMeshVisible="True" hand1Color="66FF66FF" hand2Color="66CCFFFF">
+    <Camera>
+      <Position x="0.6" y="-0.8" z="0.6" />
+      <Orientation yaw="25" pitch="-25" />
+    </Camera>
+  </Visualization3D>
+</IisuInteractionDesignerProject>

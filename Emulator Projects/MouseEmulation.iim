@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<EmulatorProject>
+  <IIDProjectPath>C:\Users\Frederik.SOFTKINETIC\Desktop\iisu Emulator\EmulatorScript.iid</IIDProjectPath>
+  <StartStopMapping>IID.Script.hand1IsActive</StartStopMapping>
+  <Mappings>
+    <Mapping>
+      <Name>IID.Script.handIsClosed</Name>
+      <Emulator>Mouse</Emulator>
+      <DataSource>0</DataSource>
+    </Mapping>
+    <Mapping>
+      <Name>IID.Script.horizontalPosition</Name>
+      <Emulator>Mouse</Emulator>
+      <DataSource>0</DataSource>
+    </Mapping>
+    <Mapping>
+      <Name>IID.Script.verticalPosition</Name>
+      <Emulator>Mouse</Emulator>
+      <DataSource>1</DataSource>
+    </Mapping>
+    <Mapping>
+      <Name>IID.Script.hand1IsActive</Name>
+      <Emulator>NONE</Emulator>
+      <DataSource>-1</DataSource>
+    </Mapping>
+  </Mappings>
+</EmulatorProject>
