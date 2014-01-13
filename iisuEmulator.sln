@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iisuEmulator", "iisuEmulator\iisuEmulator.csproj", "{AD187FB9-1486-4CD4-8B44-3819BFEB9F0C}"
 EndProject
 Global

@@ -21,16 +21,18 @@ namespace iisuEmulator.Emulators
             public ushort Buttons;
         };
 
-        [DllImport("VJoy.dll", CallingConvention = CallingConvention.StdCall)]
+		//private VJoyVJoylink vJoyLink;
+		
+		[DllImport("VJoyLink.dll", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool VJoy_Initialize(StringBuilder name, StringBuilder serial);
+        private static extern bool VJoyInit();
 
-        [DllImport("VJoy.dll", CallingConvention = CallingConvention.StdCall)]
-        private static extern void VJoy_Shutdown();
+        [DllImport("VJoyLink.dll", CallingConvention = CallingConvention.StdCall)]
+        private static extern void VJoyShutdown();
 
-        [DllImport("VJoy.dll", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("VJoyLink.dll", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool VJoy_UpdateJoyState(int id, ref JoystickState joyState);
+        private static extern bool VJoyUpdateJoyState(int id, ref JoystickState joyState);
 
         private JoystickState[] m_joyState;
 
@@ -45,20 +47,18 @@ namespace iisuEmulator.Emulators
             m_joyState[0] = new JoystickState();
             m_joyState[1] = new JoystickState();
 
-            StringBuilder Name = new StringBuilder("Softkinetic (iisu Device Emulator)");
-            StringBuilder Serial = new StringBuilder("c724c01fadd4967b398d742b2b637676");
 
-            return VJoy_Initialize(Name, Serial);
+			return VJoyInit();
         }
 
         public void Shutdown()
         {
-            VJoy_Shutdown();
+			VJoyShutdown();
         }
 
         public bool Update(int id)
         {
-            return VJoy_UpdateJoyState(id, ref m_joyState[id]);
+			return VJoyUpdateJoyState(id, ref m_joyState[id]);
         }
 
         public void Reset()

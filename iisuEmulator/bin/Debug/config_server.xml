@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<CONFIG>
+	<IISU_BIN_DIR>c:\softkinetic\iisu\bin</IISU_BIN_DIR>
+	<IISU_CONFIG_FILE>iisu_config.xml</IISU_CONFIG_FILE>
+<OPTIONS>
+		<ENABLE_SERVER>1</ENABLE_SERVER>
+	</OPTIONS>
+</CONFIG>
+
